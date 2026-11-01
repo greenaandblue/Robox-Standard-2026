@@ -67,7 +67,7 @@ static void trigger_motor_turn_back(void);
  */
 static void shoot_bullet_control(void);
 
-void door_control(void);
+static void door_control(void);
 
 
 shoot_control_t shoot_control; // 射击数据
@@ -281,9 +281,10 @@ static void shoot_set_mode(void)
     }
     else if (shoot_control.shoot_mode == SHOOT_CONTINUE_BULLET)
     {
-        if (!shoot_control.press_l || !(switch_is_down(shoot_control.shoot_rc->rc.s[SHOOT_RC_MODE_CHANNEL])))
+        // exit only when neither mouse-left nor switch-down is active (was ||, which made the mode flicker every 1 ms)
+        if (!shoot_control.press_l && !switch_is_down(shoot_control.shoot_rc->rc.s[SHOOT_RC_MODE_CHANNEL]))
         {
-            shoot_control.shoot_mode = SHOOT_READY_FRIC;
+            shoot_control.shoot_mode = SHOOT_READY;
         }
     }
 
@@ -470,34 +471,38 @@ static void shoot_bullet_control(void)
 }
 
 static bool_t door_motor_on = FALSE;
-static bool_t last_status = FALSE;
+static uint8_t last_door_switch = 0xFF; // invalid value, so the first reading counts as a change
 static uint32_t door_move_start_time = 0;
-static uint32_t door_move_duration = 1000;
+static uint32_t door_move_duration = 1000; // ms the door motor runs per move
 
+/**
+ * @brief  drive the magazine door from the right switch (rc.s[0]).
+ *         A move starts only when the switch position CHANGES (up = open, mid = close)
+ *         and the motor is stopped after door_move_duration.
+ *         Previously the move restarted every time door_stop() ran, so the motor never stopped.
+ */
 static void door_control(void)
 {
+    uint8_t door_switch = shoot_control.shoot_rc->rc.s[0];
 
-    if (switch_is_up(shoot_control.shoot_rc->rc.s[0]))
+    if (door_switch != last_door_switch)
     {
-        if (door_motor_on == FALSE)
+        last_door_switch = door_switch;
+
+        if (switch_is_up(door_switch))
         {
-            door_move_start_time = HAL_GetTick(); // 记录开始移动的时间
             door_open();
+            door_move_start_time = HAL_GetTick();
             door_motor_on = TRUE;
         }
-    }
-
-    else if(switch_is_mid(shoot_control.shoot_rc->rc.s[0]))
-    {
-        if (door_motor_on == FALSE)
+        else if (switch_is_mid(door_switch))
         {
-            door_move_start_time = HAL_GetTick(); // 记录开始移动的时间
             door_close();
+            door_move_start_time = HAL_GetTick();
             door_motor_on = TRUE;
         }
     }
 
-    // 检查是否达到目标时间
     if (door_motor_on && (HAL_GetTick() - door_move_start_time >= door_move_duration))
     {
         door_stop();

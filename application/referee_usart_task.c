@@ -96,14 +96,15 @@ uint8_t packet[CV_PACKET_LENGTH];
 void referee_usart_task(void const *argument)
 {
 
-  memset(dma_buf, 0, 200);
-  memset(rx_data, 0, 50);
+  memset(dma_buf, 0, sizeof(dma_buf)); // was 200: dma_buf is only 50 bytes
+  memset(rx_data, 0, sizeof(rx_data));
   const fp32 *imu = get_INS_angle_point();
   while (1)
   {
     sprintf((char *)dma_buf, "A5%f,%f,%f", imu[0], imu[1], imu[2]);
     HAL_UART_Transmit_DMA(&huart6, (uint8_t *)dma_buf, strlen((const char *)dma_buf));
     HAL_UART_Receive_DMA(&huart6, (uint8_t *)rx_data, sizeof(rx_data));
+    osDelay(1); // yield: without this the loop starved the OLED and idle tasks
   }
 }
 
@@ -128,7 +129,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 // use to find the first complete packet from rx_data, if find A5 and come with 5A, then
 bool find_CpltPacket(void)
 {
-  for (size_t i = 0; i < sizeof(rx_data); i++)
+  // stop early enough that the whole packet fits inside rx_data (was reading past the end)
+  for (size_t i = 0; i + sizeof(packet) <= sizeof(rx_data); i++)
   {
     // find A55A
     if (rx_data[i] == 0xA5 && rx_data[i + 1] == 0x5A)
