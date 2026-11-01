@@ -77,7 +77,9 @@ unsigned char rx_data[50];
 /* hex_Pitch: 4 bytes (to be converted to IEEE 754 standard single precision floating point) */
 /* ---Above is the payload--- */
 /* Checksum: 1 byte */
+/* Detect flag: 1 byte */
 /* Footer (ff): 1 byte */
+/* (full byte layout is documented above find_CpltPacket) */
 
 // 闂傚倸鍊峰ù鍥敋瑜嶉～婵�?��閸岋妇绋忔繝銏ｅ煐閸旀牠宕曞Δ浣典簻闁哄倸鐏濋埛鏂库槈閹惧磭效闁哄矉缍佸�?�??鎼淬垹鏋戦梻浣哥－缁垰螞閸愵喖钃熺�?��儱鐗滃銊╂⒑閸涘﹥灏版慨妯稿�?閸掓帒鈻庨幇顒傜�?��佸綊鍋婇崢钘夆枍閵忋倖鈷戝ù鍏肩懅閸掓澘顭跨捄鐑樺枠鐎规洘鍨块�?��肩磼濡桨鐢婚梻浣虹帛椤ㄥ懘�?�繝鍥х闂侇剙绉甸埛鎴︽煕濠靛�?顏柨娑欐⒒缁辨挸�?奸崟顓犵崲濡ょ姷鍋涘Λ婵嗙暦濮椻偓椤㈡瑩鎳�?��濠冃у┑锛�?��閸婃牜鏁繝鍥ㄥ�?��柨鏇炲亞閺佸﹦鈧箍鍎遍ˇ浼村煕閹达附鐓曢柨鏃囶嚙�?炴銇勮箛鏇炴灈闁哄瞼鍠愰ˇ鐗堟償閳ュ啿绠ｉ梻浣告惈閺�?���?��鐐叉�?��瑰墽�?��弲鎼佹煥閻曞倹瀚�?
 // define a complete packet
@@ -126,22 +128,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
 }
 
-// use to find the first complete packet from rx_data, if find A5 and come with 5A, then
+/*
+ * Packet sent by the CV computer (standard-cv / Robox2025 UART_UTIL.send_data), 14 bytes:
+ *   [0]  0xA5          header
+ *   [1]  0x5A          header
+ *   [2]  0x0D          length byte (CV side writes 0x0D even though the packet is 14 bytes, so it is not checked)
+ *   [3..6]  yaw        float32, big-endian, radians
+ *   [7..10] pitch      float32, big-endian, radians
+ *   [11] checksum      (sum of bytes [3..10]) & 0xFF
+ *   [12] detect flag   0x01 = target found, 0x00 = no target
+ *   [13] 0xFF          footer
+ */
+#define CV_PKT_CHECKSUM_INDEX 11
+
+static bool cv_packet_valid(const uint8_t *p)
+{
+  if (p[0] != 0xA5 || p[1] != 0x5A || p[CV_PACKET_LENGTH - 1] != 0xFF)
+  {
+    return false;
+  }
+
+  uint8_t sum = 0;
+  for (size_t k = 3; k < CV_PKT_CHECKSUM_INDEX; k++)
+  {
+    sum += p[k];
+  }
+  return sum == p[CV_PKT_CHECKSUM_INDEX];
+}
+
+// Find the NEWEST valid packet in rx_data and copy it into packet[].
+// The DMA fills rx_data front to back, so the newest data is at the end:
+// search backwards so the gimbal gets the latest angles instead of the oldest.
+// The loop bound keeps the whole packet inside rx_data (the old loop read past the end).
 bool find_CpltPacket(void)
 {
-  // stop early enough that the whole packet fits inside rx_data (was reading past the end)
-  for (size_t i = 0; i + sizeof(packet) <= sizeof(rx_data); i++)
+  for (size_t i = sizeof(rx_data) - sizeof(packet) + 1; i-- > 0;)
   {
-    // find A55A
-    if (rx_data[i] == 0xA5 && rx_data[i + 1] == 0x5A)
+    if (cv_packet_valid(&rx_data[i]))
     {
-      // find FF
-      if (rx_data[i + sizeof(packet) - 1] == 0xFF)
-      {
-        // copy the packet
-        memcpy(packet, &rx_data[i], sizeof(packet));
-        return true;
-      }
+      memcpy(packet, &rx_data[i], sizeof(packet));
+      return true;
     }
   }
   return false;
