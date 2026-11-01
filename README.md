@@ -56,7 +56,7 @@ The remote control (DBUS, USART3) is handled in an interrupt in `remote_control.
 | Input | Action |
 |---|---|
 | W A S D | move |
-| Shift (hold) | spin (小陀螺), right switch up only — also the "minus" modifier for servo keys |
+| Shift (hold) | spin, right switch up only — also the "minus" modifier for servo keys |
 | Ctrl (hold) | swing offset (chassis turned 0.6 rad from gimbal), right switch up only |
 | Q / E | friction wheels on / off (left switch mid) |
 | mouse left (hold) | fire |
