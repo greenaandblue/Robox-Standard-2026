@@ -1,7 +1,7 @@
 /**
   ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       usb_task.c/h
-  * @brief      usb outputs the error message.usbÊä³ö´íÎóĞÅÏ¢
+  * @brief      usb outputs the error message.usbè¾“å‡ºé”™è¯¯ä¿¡æ¯
   * @note
   * @history
   *  Version    Date            Author          Modification

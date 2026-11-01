@@ -1,11 +1,11 @@
 /**
   ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       shoot.c/h
-  * @brief      ������ܡ�
+  * @brief      射击功能。
   * @note
   * @history
   *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-26-2018     RM              1. ���
+  *  V1.0.0     Dec-26-2018     RM              1. 完成
   *
   @verbatim
   ==============================================================================
@@ -24,34 +24,34 @@
 #include "remote_control.h"
 #include "user_lib.h"
 
-// ������俪��ͨ������
+// 射击发射开关通道数据
 #define SHOOT_RC_MODE_CHANNEL 1
-// ��̨ģʽʹ�õĿ���ͨ��
+// 云台模式使用的开关通道
 
 #define SHOOT_CONTROL_TIME GIMBAL_CONTROL_TIME
 
 #define SHOOT_FRIC_PWM_ADD_VALUE 400.0f
 
-// ���Ħ���ּ���� �ر�
+// 射击摩擦轮激光打开 关闭
 #define SHOOT_ON_KEYBOARD KEY_PRESSED_OFFSET_Q
 #define SHOOT_OFF_KEYBOARD KEY_PRESSED_OFFSET_E
 
-// �����ɺ� �ӵ�����ȥ���ж�ʱ�䣬�Է��󴥷�
+// 射击完成后 子弹弹出去后，判断时间，以防误触发
 #define SHOOT_DONE_KEY_OFF_TIME 15
-// ��곤���ж�
+// 鼠标长按判断
 #define PRESS_LONG_TIME 400
-// ң����������ش��µ�һ��ʱ��� ���������ӵ� �����嵥
+// 遥控器射击开关打下档一段时间后 连续发射子弹 用于清单
 #define RC_S_LONG_TIME 2000
-// Ħ���ָ��� ���� ʱ��
+// 摩擦轮高速 加速 时间
 #define UP_ADD_TIME 120
-// �����������ֵ��Χ
+// 电机反馈码盘值范围
 #define HALF_ECD_RANGE 4096
 #define ECD_RANGE 8191
-// ���rmp �仯�� ��ת�ٶȵı���
+// 电机rmp 变化成 旋转速度的比例
 #define MOTOR_RPM_TO_SPEED 0.00290888208665721596153948461415f
 #define MOTOR_ECD_TO_ANGLE 0.000021305288720633905968306772076277f
 #define FULL_COUNT 18
-// �����ٶ�
+// 拨弹速度
 #define TRIGGER_SPEED -8.0f
 #define CONTINUE_TRIGGER_SPEED -15.0f
 #define READY_TRIGGER_SPEED -5.0f
@@ -60,7 +60,7 @@
 #define SWITCH_TRIGGER_ON 0
 #define SWITCH_TRIGGER_OFF 1
 
-// ����ʱ�� �Լ���תʱ��
+// 卡单时间 以及反转时间
 #define BLOCK_TRIGGER_SPEED 1.0f
 #define BLOCK_TIME 700
 #define REVERSE_TIME 500
@@ -69,7 +69,7 @@
 #define PI_FOUR 0.78539816339744830961566084581988f
 #define PI_TEN 0.314f
 
-// �����ֵ��PID
+// 拨弹轮电机PID
 #define TRIGGER_ANGLE_PID_KP 800.0f
 #define TRIGGER_ANGLE_PID_KI 0.5f
 #define TRIGGER_ANGLE_PID_KD 0.0f
@@ -138,7 +138,7 @@ typedef struct
   uint16_t heat;
 } shoot_control_t;
 
-// �����������̨ʹ��ͬһ��can��id��Ҳ�����������̨������ִ��
+// 由于射击和云台使用同一个can的id故也射击任务在云台任务中执行
 extern void shoot_init(void);
 extern int16_t shoot_control_loop(void);
 

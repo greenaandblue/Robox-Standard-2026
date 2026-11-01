@@ -10,7 +10,7 @@ typedef struct filter
 } Kf;
 
 /**
- * @brief 卡尔曼滤�?
+ * @brief 卡尔曼滤波 (Kalman filter)
  *
  * @param[in] ResrcData
  * @param[in] ProcessNiose_Q

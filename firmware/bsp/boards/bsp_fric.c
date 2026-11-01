@@ -18,17 +18,17 @@ void fric2_on(uint16_t cmd)
 void door_open(void)
 {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 1000); // ֹͣ���
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 1000); // 停止舵机
 }
 
 void door_close(void)
 {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 2000); // ֹͣ���
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 2000); // 停止舵机
 }
 
 void door_stop(void)
 {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 0); // ֹͣ���
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 0); // 停止舵机
 }
