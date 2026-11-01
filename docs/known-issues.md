@@ -68,4 +68,5 @@ Priority: **P0** = memory corruption, starved tasks, or a feature that clearly m
 - [ ] Chassis X/Y channels and WASD are swapped in `chassis_rc_to_control_vector()` instead of
   fixing the wheel mapping in `chassis_vector_to_mecanum_wheel_speed()`.
 - [ ] Names: `UART7_CommandRoute()` handles USART6; `referee_usart_task.c` is really the CV task.
-- [ ] Port to Arm Compiler 6 (see `docs/build.md`).
+- [x] Port to Arm Compiler 6 (see `docs/build.md`). *Done in "Port to Arm Compiler 6".*
+  Still to confirm on hardware: links with the AC5-built `AHRS.lib`, and the robot behaves the same.

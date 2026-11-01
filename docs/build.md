@@ -12,20 +12,21 @@
 3. Open `firmware/MDK-ARM/standard_robot.uvprojx`. If µVision asks for the device pack
    `Keil.STM32F4xx_DFP`, install it from the Pack Installer.
 
-## 2. Compiler: Arm Compiler 5 vs 6
+## 2. Compiler: Arm Compiler 6
 
-The project is set to **Arm Compiler 5** (V5.06 update 7). Current MDK versions don't ship AC5,
-and the Community license does not cover AC5.
+The project builds with **Arm Compiler 6** (covered by the Community license). It was ported
+from Arm Compiler 5 in Nov 2026:
 
-- If your machine already has AC5 with a license (e.g. an older club PC), build as is.
-- Otherwise switch to AC6: *Options for Target → Target → ARM Compiler →
-  "Use default compiler version 6"*. The code is **not ported to AC6 yet**; expect errors from:
-  - `Middlewares/.../portable/RVDS/ARM_CM4F` (FreeRTOS port uses AC5 inline assembly)
-    → replace with the `GCC/ARM_CM4F` port of the same FreeRTOS version;
-  - `__packed` (34 uses in 10 files) → `__attribute__((packed))`;
-  - `components/algorithm/AHRS.lib` was built with AC5 — check that it still links.
+- FreeRTOS port switched from `portable/RVDS/ARM_CM4F` (AC5 inline assembly) to
+  `portable/GCC/ARM_CM4F` from the same FreeRTOS version (ST's V10.0.1 package);
+- `__packed` replaced with `__attribute__((packed))` (same struct layout);
+- `__CC_ARM` removed from the project defines, so CMSIS / `arm_math.h` take their AC6 paths.
 
-  This port is tracked in [`known-issues.md`](known-issues.md).
+After opening the project once, check *Options for Target → Target → ARM Compiler* says
+**"Use default compiler version 6"** (select it if not). Leave *Asm → Assembler Option* on
+**armasm (Arm Syntax)**: `startup_stm32f407xx.s` is written in Arm syntax.
+
+AC5 is no longer supported (the GCC FreeRTOS port does not build with AC5).
 
 ## 3. Build
 
