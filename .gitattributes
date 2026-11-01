@@ -1,0 +1,7 @@
+# Keep line endings exactly as committed (Keil on Windows and VS Code on Mac share this repo)
+* -text
+
+# Binary libraries and Keil files: never diff/merge as text
+*.lib binary
+*.a binary
+*.uvprojx -diff

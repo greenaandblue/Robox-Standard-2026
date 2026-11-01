@@ -1,15 +1,41 @@
+# ---- Keil MDK build output ----
+firmware/MDK-ARM/standard_tpye_c/
+firmware/MDK-ARM/RTE/
+firmware/MDK-ARM/DebugConfig/
 *.o
 *.d
 *.crf
 *.dep
-*.hex
 *.axf
+*.hex
+*.bin
+*.map
 *.htm
 *.lnp
 *.sct
 *.lst
-*.uvprojx
-*.uvoptx
-MDK-ARM/*
-.vscode/*
+*.iex
+*.tra
+*.__i
+*._ia
+*.bak
 
+# Per-user Keil UI / debugger state (the project file .uvprojx IS tracked)
+*.uvguix.*
+*.uvoptx
+*.uvopt
+JLinkLog.txt
+JLinkSettings.ini
+
+# ---- Editors / OS ----
+.vscode/*
+!.vscode/settings.json
+!.vscode/c_cpp_properties.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# ---- Python (comm/tools) ----
+__pycache__/
+*.pyc
+.venv/

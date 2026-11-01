@@ -1,0 +1,40 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "STM32F407 (Keil)",
+      "includePath": [
+        "${workspaceFolder}/firmware/Inc",
+        "${workspaceFolder}/firmware/Drivers/STM32F4xx_HAL_Driver/Inc",
+        "${workspaceFolder}/firmware/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/firmware/Middlewares/Third_Party/FreeRTOS/Source/include",
+        "${workspaceFolder}/firmware/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
+        "${workspaceFolder}/firmware/Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F",
+        "${workspaceFolder}/firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+        "${workspaceFolder}/firmware/Drivers/CMSIS/Include",
+        "${workspaceFolder}/firmware/application",
+        "${workspaceFolder}/firmware/bsp/boards",
+        "${workspaceFolder}/firmware/components/devices",
+        "${workspaceFolder}/firmware/components/algorithm",
+        "${workspaceFolder}/firmware/components/algorithm/Include",
+        "${workspaceFolder}/firmware/components/support",
+        "${workspaceFolder}/firmware/application/protocol",
+        "${workspaceFolder}/firmware/components/controller",
+        "${workspaceFolder}/firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+        "${workspaceFolder}/firmware/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"
+      ],
+      "defines": [
+        "USE_HAL_DRIVER",
+        "STM32F407xx",
+        "ARM_MATH_CM4",
+        "__FPU_PRESENT=1U",
+        "__FPU_USED=1U",
+        "__packed=__attribute__((packed))",
+        "__CC_ARM"
+      ],
+      "cStandard": "c99",
+      "intelliSenseMode": "gcc-arm",
+      "compilerPath": ""
+    }
+  ]
+}

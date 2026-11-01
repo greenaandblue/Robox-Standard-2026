@@ -1,5 +1,5 @@
 {
-  "files.encoding": "gbk",
+  "files.encoding": "utf8",
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",
   "C_Cpp_Runner.cppCompilerPath": "clang++",
@@ -63,5 +63,13 @@
     "main.h": "c",
     "struct_typedef.h": "c",
     "usb_task.h": "c"
+  },
+  "files.autoGuessEncoding": false,
+  "C_Cpp.default.configurationProvider": "",
+  "[c]": {
+    "files.encoding": "utf8"
+  },
+  "search.exclude": {
+    "**/firmware/MDK-ARM/standard_tpye_c": true
   }
 }

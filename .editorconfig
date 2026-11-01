@@ -1,0 +1,27 @@
+# All of the club's own source files are UTF-8.
+# Do NOT re-save files as GBK: that is how comments got corrupted before.
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{c,h}]
+indent_style = space
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
+# Third-party code: keep whatever encoding/format the vendor shipped
+[firmware/{Drivers,Middlewares}/**]
+charset = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
