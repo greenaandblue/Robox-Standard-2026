@@ -48,6 +48,8 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
+/* FreeRTOS port tick handler (port.c). AC5 accepted the call without a prototype; AC6 (C99) does not. */
+extern void xPortSysTickHandler(void);
 
 /* USER CODE END PFP */
 
